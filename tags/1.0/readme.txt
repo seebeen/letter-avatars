@@ -16,7 +16,7 @@ Letter Avatars **enables custom avatars for users without gravatar**. Avatar wil
 
 Letter Avatars does not use any images, scripts, or font-icons. All letters will be rendered by your theme font (or Optionally via a Google font).
 
-** Features **
+**Features**
 
 * Works anywhere - Plugin hooks into get_avatar function, so the avatar size is preserved
 * Highly customizable - You can change colors, letter font, as well as the font size
