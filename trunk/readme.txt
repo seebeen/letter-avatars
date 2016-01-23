@@ -3,8 +3,8 @@ Contributors: seebeen
 Donate link: https://sgi.io/donate
 Tags: letter, avatars, custom-avatar, gravatar, comment, comments
 Requires at least: 3.8
-Tested up to: 4.4
-Stable tag: 1.0
+Tested up to: 4.4.1
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Letter Avatars **enables custom avatars for users without gravatar**. Avatar wil
 
 Letter Avatars does not use any images, scripts, or font-icons. All letters will be rendered by your theme font (or Optionally via a Google font).
 
-** Features **
+**Features**
 
 * Works anywhere - Plugin hooks into get_avatar function, so the avatar size is preserved
 * Highly customizable - You can change colors, letter font, as well as the font size
@@ -41,6 +41,14 @@ Currently none
 2. Plugin settings
 
 == Changelog ==
+
+= 1.1 =
+* Added hook for style loading
+* Added hook for plugin options
+* Improved gravatar detection
+* Improved Theme / Plugin compatibility
+* Improved performance
+* Added PHPDoc to all classes / functions
 
 = 1.0 =
 * Initial release

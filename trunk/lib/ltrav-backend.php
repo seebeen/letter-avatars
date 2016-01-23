@@ -5,20 +5,50 @@
  */
 
 
+
+/**
+ * Main bakend class for all WP-Admin hooks and gimmicks
+ * 
+ * This class loads all of our backend hooks and sets up admin interfaces
+ * 
+ * @subpackage Admin Interfaces
+ * @author Sibin Grasic
+ * @since 1.0
+ * @var version - plugin version
+ * @var opts - plugin opts
+ */
 Class SGI_LtrAv_Backend
 {
 
 	private $version;
 	private $opts;
 
+
+	/**
+	 * Letter Avatars Admin constructor
+	 * 
+	 * Constructro first checks if plugin version exists in DB. If this is the first activation, plugin adds version info to the DB with autoload option set to false
+	 * In that manner we can easily change plugin options, and add further defaults across versions, and preserve compatibility
+	 * @return void
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 */
 	public function __construct()
 	{
 		
 		if ($ltrav_ver = get_option('sgi_ltrav_ver')) :
-			$this->version = $ltrav_ver;
+
+			if (version_compare(SGI_LTRAV_VERSION,$ltrav_ver,'>')) :
+				update_option('sgi_fitvids_ver', SGI_LTRAV_VERSION);
+			endif;
+
+			$this->version = SGI_LTRAV_VERSION;
+
 		else :
-			$ssr_ver = SGI_LTRAV_VERSION;
-			add_option('sgi_ltrav_ver',$ssr_ver,'no');
+
+			$ltrav_ver = SGI_LTRAV_VERSION;
+			add_option('sgi_ltrav_ver',$ltrav_ver,'no');
+
 		endif;
 
 		$ltrav_opts = get_option(
@@ -48,6 +78,17 @@ Class SGI_LtrAv_Backend
 
 	}
 
+	/**
+	 * Function that adds admin scripts and styles to wp-admin
+	 * We check if we're on the discussion options page, and if we're not, we bail out immediately.
+	 * 
+	 * If we are, we're loading Chosen css and js files, along with colorpicker, and our own admin js to handle some nifty thing
+	 * @param string $hook - admin page that's being loaded
+	 * @return void
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 * 
+	 */
 	public function add_admin_scripts($hook)
 	{
 		if ($hook !== 'options-discussion.php')
@@ -65,6 +106,13 @@ Class SGI_LtrAv_Backend
 		wp_enqueue_script('ltrav-admin-js');
 	}
 
+	/**
+	 * Function that adds settings link to the plugin page
+	 * @param array $links 
+	 * @return array - merged array with our links
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 */
 	public function add_settings_link($links)
 	{
 		$admin_url = admin_url();
@@ -73,6 +121,12 @@ Class SGI_LtrAv_Backend
 		return array_merge($links,$link);
 	}
 
+	/**
+	 * Function that is hooked into the admin initialisation and registers settings
+	 * @return void
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 */
 	public function register_settings()
 	{
 		add_settings_section('sgi_ltrav_opts','Letter Avatars',array(&$this, 'settings_section_info'), 'discussion');
@@ -83,6 +137,13 @@ Class SGI_LtrAv_Backend
 		register_setting('discussion','sgi_ltrav_opts',array(&$this,'sanitize_opts'));
 	}
 
+	/**
+	 * Function that generates gravatar override checkbox
+	 * @param boolean $use_gravatar - Gravatar options
+	 * @return void
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 */
 	public function gravatar_callback($use_gravatar)
 	{
 		$use_gravatar = checked($use_gravatar,true,false);
@@ -91,6 +152,13 @@ Class SGI_LtrAv_Backend
 		echo "<small>If you check this options, Gravatar™ will be shown for those users that have it.</small>";
 	}
 
+	/**
+	 * Function that generates style options for the letter avatar
+	 * @param array $style - Style options
+	 * @return void
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 */
 	public function style_callback($style)
 	{
 
@@ -115,7 +183,14 @@ Class SGI_LtrAv_Backend
 		echo "<input type=\"text\" name=\"sgi_ltrav_opts[style][padding]\" value=\"{$style['padding']}\">".'<br>';
 		echo "<small>Padding for the letters - Allows CSS syntax (without px)</small><br><br>";
 	}
-
+	
+	/**
+	 * Function that generates font options for the letter avatar
+	 * @param array $font - font options
+	 * @return void
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 */
 	public function font_callback($font)
 	{
 		$load_gfont = checked($font['load_gfont'],true,false);
@@ -139,11 +214,25 @@ Class SGI_LtrAv_Backend
 
 	}
 
+	/**
+	 * Function that displays the section heading information
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 */
 	public function settings_section_info()
 	{
 		echo '<div id="sgi-ltrav"></div><p>'.__('These are the settings for the Letter Avatars','sgiltrav').'</p>';
 	}
 
+
+	/**
+	 * Function that generates select boxes for google fonts.
+	 * We generate a select box for all the google fonts, with custom data-var variable that lists available styles for the font
+	 * 
+	 * @param string $selected_font - Selected font for the letter avatar
+	 * @param string $selected_style - Selected font style for the letter avatar
+	 * @return void
+	 */
 	private function generate_gfont_select($selected_font,$selected_style)
 	{
 		$font_list = $this->get_google_font_list();
@@ -154,7 +243,6 @@ Class SGI_LtrAv_Backend
 			return;
 		endif;
 
-		$font_list = json_decode($font_list,true);
 		$sel_font_array = null;
 
 		echo '<select id="ltrav-gfont-select" name="sgi_ltrav_opts[font][font_name]">';
@@ -185,6 +273,13 @@ Class SGI_LtrAv_Backend
 		echo '</select><br>';
 	}
 
+	/**
+	 * Function that gets the complete google fonts list
+	 * @return array - JSON decoded font list from google server
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 * @todo Add transient caching to prevent google api abuse / overload
+	 */
 	private function get_google_font_list()
 	{
 		$url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyC2XWzS33ZIlkC17s5GEX31ltIjOffyP5o';
@@ -197,9 +292,19 @@ Class SGI_LtrAv_Backend
 			$font_list = false;
 		endif;
 
-		return $font_list;
+		return json_decode($font_list,true);
 
 	}
+
+	/**
+	 * Function that "sanitizes options"
+	 * 
+	 * @param array $opts
+	 * @return array - Sanitized options array
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 * 
+	 */
 	public function sanitize_opts($opts)
 	{
 
