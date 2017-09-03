@@ -3,7 +3,8 @@ Contributors: seebeen
 Donate link: https://sgi.io/donate
 Tags: letter, avatars, custom-avatar, gravatar, comment, comments
 Requires at least: 3.8
-Tested up to: 4.4.1
+Tested up to: 4.9.0
+Requires PHP: 5.3.3
 Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -40,7 +41,21 @@ Currently none
 
 2. Plugin settings
 
+=
+
 == Changelog ==
+
+= 2.0 =
+* **Fully reworked codebase**
+* New Feature: Same color for repeated comments by same author
+* Improvement: Moved settings to separate page
+* Improvement: Revamped settings system
+* Improvement: Reworked avatar hookin process - better performance
+* Improvement: Reworked gravatar detection - works in all scenarios
+* Improvement: Better color randomization - each avatar has a unique color
+* Bugfix: Improved option handling
+* Bugfix: Better google font handling
+* Many more performance and stability fixes
 
 = 1.1 =
 * Added hook for style loading
