@@ -19,29 +19,43 @@ Letter Avatars does not use any images, scripts, or font-icons. All letters will
 
 **Features**
 
-* Works anywhere - Plugin hooks into get_avatar function, so the avatar size is preserved
+* Works anywhere - Plugin hooks into pre_get_avatar function, so the avatar size is preserved
 * Highly customizable - You can change colors, letter font, as well as the font size
 * Stylish - You can change the background and letter colors or you can randomize them for all the avatars
-* Lightweight - Plugin does not use any external stylesheets, or js files. It only adds a small inline css part in your header
-* Highly compatible - Wou don't have to edit your theme / plugin files, it works automatically and plays nice with other plugins
+* Lightweight - Plugin does not use any external stylesheet, image, or js files. It only adds a small inline css in your header
+* Highly compatible - You don't have to edit your theme / plugin files, it works automatically and plays nice with other plugins
 
 == Installation ==
 
 1. Upload letter-avatars.zip to plugins via WordPress admin panel, or upload unzipped folder to your plugins folder
 2. Activate the plugin through the "Plugins" menu in WordPress
-3. Go to Settings->Discussion to manage the options
+3. Go to Settings->Letter Avatars to manage the options
 
 == Frequently Asked Questions ==
 
-Currently none
+= Can I disable gravatars and use Letter Avatars for all comments? =
+
+Yes you can. By default, Letter Avatars are used only for users without gravatar, but you can change that in user settings.
+
+= Can I change the font for my Avatars? =
+
+By default, Letter Avatars will be displayed in your theme font, but you can change that in plugin settings.
+
+= Does this plugin work with bbPress / BuddyPress? / wpDiscuz =
+
+At the moment, no. This feature is planned and will be implemented in one of the next versions
+
+= What does the user lock-in option do? =
+
+If you enable user lock-in (when random colors are enabled), each user will have his own unique color which will be used for all the comments.
 
 == Screenshots ==
 
-1. Plugin in action
+1. Plugin settings page
 
-2. Plugin settings
+2. Random colored avatars with user lock-in
 
-=
+3. Gravatars displayed alongside letter avatars
 
 == Changelog ==
 
@@ -70,4 +84,4 @@ Currently none
 
 == Upgrade Notice ==
 
-None for now
+You will need to resave your settings after updating plugin
