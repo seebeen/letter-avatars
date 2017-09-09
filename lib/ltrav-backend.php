@@ -43,7 +43,7 @@ Class SGI_LtrAv_Backend
 		if ($ltrav_ver = get_option('sgi_ltrav_ver')) :
 
 			if (version_compare(SGI_LTRAV_VERSION,$ltrav_ver,'>')) :
-				update_option('sgi_fitvids_ver', SGI_LTRAV_VERSION);
+				update_option('sgi_ltrav_ver', SGI_LTRAV_VERSION);
 			endif;
 
 			$this->version = SGI_LTRAV_VERSION;
@@ -431,36 +431,6 @@ Class SGI_LtrAv_Backend
 		echo '</div>';
 
 	}
-	
-	/**
-	 * Function that generates font options for the letter avatar
-	 * @param array $font - font options
-	 * @return void
-	 * @author Sibin Grasic
-	 * @since 1.0
-	 */
-	public function font_callback($font)
-	{
-		$load_gfont = checked($font['load_gfont'],true,false);
-		$style = ($font['load_gfont'] == true) ? "display:block;" : "display:block	;";
-
-		// Load Google Font
-		
-		echo "<label><strong>Google Fonts</strong></label><br>";
-		echo "<input type=\"checkbox\" name=\"sgi_ltrav_opts[font][load_gfont]\" {$load_gfont} ><label>Load Google Fonts CSS</label><br>";
-		echo "<small>If you check this option, you can select google font for the Letter avatar below.</small><br><br>";
-
-		// Google Font selector
-		echo "<div style=\"${style}\">";
-		$this->generate_gfont_select($font['font_name'],$font['gfont_style']);
-		echo '</div>';
-
-		// Font size
-		echo "<label><strong>Font size</strong></label><br>";
-		echo "<input type=\"text\" name=\"sgi_ltrav_opts[font][font_size]\" value=\"{$font['font_size']}\">".'<br>';
-		echo "<small>Font size - in px</small><br><br>";
-
-	}
 
 	public function font_size_callback($font_opts)
 	{
@@ -473,7 +443,6 @@ Class SGI_LtrAv_Backend
 		);
 
 	}
-
 
 	/**
 	 * Function that generates select boxes for google fonts.

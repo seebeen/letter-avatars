@@ -456,9 +456,10 @@ class SGI_LtrAv_Frontend
 		endif;
 
 		$avatar = sprintf(
-			'<div class="sgi-letter-avatar" style="line-height:%spx; height:%spx; width:%spx; %s">
+			'<div class="sgi-letter-avatar avatar avatar-%s" style="line-height:%spx; height:%spx; width:%spx; %s">
 				<span %s>%s</span>
 			</div>',
+			$args['height'],
 			$args['height'],
 			$args['height'],
 			$args['width'],

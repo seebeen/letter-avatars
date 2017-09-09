@@ -2,9 +2,10 @@
 /*
 Plugin Name: Letter Avatars
 Description: Letter Avatars enable you to use Letters from commenters names instead of generic avatars.
-Version: 2.0
+Version: 2.0.1
 Author: Sibin Grasic
 Author URI: http://sgi.io
+Text Domain: letter-avatars
 */
 
 /**
@@ -31,12 +32,12 @@ if ( !defined( 'SGI_LTRAV_PATH' ) )
 	define( 'SGI_LTRAV_PATH', plugin_dir_path( SGI_LTRAV_FILE ) );
 
 /* Define internal version for possible update changes */
-define ('SGI_LTRAV_VERSION', '1.0');
+define ('SGI_LTRAV_VERSION', '2.0.1');
 
 /* Load Up the text domain */
 function sgi_ltrav_load_textdomain()
 {
-	load_plugin_textdomain('sgiltrav', false, basename( dirname( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain('letter-avatars', false, basename( dirname( __FILE__ ) ) . '/languages' );
 }
 add_action('wp_loaded','sgi_ltrav_load_textdomain');
 
@@ -45,7 +46,7 @@ if ( version_compare( PHP_VERSION, '5.2', '<' ) && version_compare(WP_VERSION, '
 	if (is_admin()) :
 		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 		deactivate_plugins( __FILE__ );
-		wp_die(__('Letter Avatars plugin requires WordPress 3.8 and PHP 5.3 or greater. The plugin has now disabled itself','sgiltrav'));
+		wp_die(__('Letter Avatars plugin requires WordPress 3.8 and PHP 5.3 or greater. The plugin has now disabled itself','letter-avatars'));
 	endif;
 endif;
 
