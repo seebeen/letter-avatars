@@ -227,30 +227,6 @@ class SGI_LtrAv_Frontend
 		return $css;
 	}
 
-	/**
-	 * Function that deterimines the font color for the letter avatar based on the background color
-	 * 
-	 * @param string $hexcolor - Hex value for the background color
-	 * @return string - color of the letter for the avatar
-	 * @link https://en.wikipedia.org/wiki/YIQ
-	 * @link https://24ways.org/2010/calculating-color-contrast/
-	 * @author Sibin Grasic
-	 * @since 1.0
-	 * 
-	 */
-	private function get_YIQ_contrast($hexcolor)
-	{
-		$hexcolor = ltrim($hexcolor,'#');
-
-		$r = hexdec(substr($hexcolor,0,2));
-		$g = hexdec(substr($hexcolor,2,2));
-		$b = hexdec(substr($hexcolor,4,2));
-
-		$yiq = (($r*299)+($g*587)+($b*114))/1000;
-
-		return ($yiq >= 128) ? '#000' : '#fff';
-	}
-
 	function process_user_identifier($id_or_email)
 	{
 		if ( is_numeric( $id_or_email ) ) :
@@ -437,12 +413,12 @@ class SGI_LtrAv_Frontend
 
 			elseif ($this->opts['style']['lock_color']) :
 
-				$bg_color = $this->generate_random_color();
+				$bg_color = $this->generate_pretty_random_color($user_uid);
 				$this->locked_colors[$user_uid] = $bg_color;
 
 			else :
 
-				$bg_color = $this->generate_random_color();
+				$bg_color = $this->generate_pretty_random_color();
 
 			endif;
 
@@ -469,6 +445,77 @@ class SGI_LtrAv_Frontend
 		);
 
 		return $avatar;
+
+	}
+
+	/**
+	 * Function that deterimines the font color for the letter avatar based on the background color
+	 * 
+	 * @param string $hexcolor - Hex value for the background color
+	 * @return string - color of the letter for the avatar
+	 * @link https://en.wikipedia.org/wiki/YIQ
+	 * @link https://24ways.org/2010/calculating-color-contrast/
+	 * @author Sibin Grasic
+	 * @since 1.0
+	 * 
+	 */
+	private function get_YIQ_contrast($hexcolor)
+	{
+		$hexcolor = ltrim($hexcolor,'#');
+
+		$r = hexdec(substr($hexcolor,0,2));
+		$g = hexdec(substr($hexcolor,2,2));
+		$b = hexdec(substr($hexcolor,4,2));
+
+		$yiq = (($r*299)+($g*587)+($b*114))/1000;
+
+		return ($yiq >= 128) ? '#000' : '#fff';
+	}
+
+	/**
+	 * @since 2.1
+	 * @param int $H - Hue
+	 * @param int $S - Saturation
+	 * @param int $V - Value
+	 * @return string - Hex color
+	 */
+	private function hsl2rgb($H, $S, $V)
+	{
+
+		$H *= 6;
+	    $h = intval($H);
+	    $H -= $h;
+	    $V *= 255;
+	    $m = $V*(1 - $S);
+	    $x = $V*(1 - $S*(1-$H));
+	    $y = $V*(1 - $S*$H);
+	    $a = [[$V, $x, $m], [$y, $V, $m],
+	          [$m, $V, $x], [$m, $y, $V],
+	          [$x, $m, $V], [$V, $m, $y]][$h];
+
+    	return sprintf("#%02X%02X%02X", $a[0], $a[1], $a[2]);
+
+	}
+
+	/**
+	 * @since 2.1
+	 * @param string $user_uid 
+	 * @return string - hex color for avatar background
+	 */
+	private function generate_pretty_random_color($user_uid)
+	{
+
+		$hue = unpack('L', hash('adler32', strtolower($user_uid), true))[1];
+
+		do {
+
+			$bg_color = $this->hsl2rgb($hue/0xFFFFFFFF, (mt_rand() / mt_getrandmax()), 1);
+
+		} while (in_array($bg_color, $this->used_colors, true));
+
+		$this->used_colors[] = $bg_color;
+
+		return $bg_color;
 
 	}
 

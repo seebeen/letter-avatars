@@ -2,7 +2,7 @@
 /*
 Plugin Name: Letter Avatars
 Description: Letter Avatars enable you to use Letters from commenters names instead of generic avatars.
-Version: 2.0.1
+Version: 2.1
 Author: Sibin Grasic
 Author URI: http://sgi.io
 Text Domain: letter-avatars
