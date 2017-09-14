@@ -59,6 +59,10 @@ If you enable user lock-in (when random colors are enabled), each user will have
 
 == Changelog ==
 
+== 2.1 ==
+* Improvement: Improved color randomization functions
+* New Feature: Colors are now calculated from e-mail hash
+
 = 2.0 =
 * **Fully reworked codebase**
 * New Feature: Same color for repeated comments by same author
