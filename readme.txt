@@ -5,7 +5,7 @@ Tags: letter, avatars, custom-avatar, gravatar, comment, comments
 Requires at least: 3.8
 Tested up to: 4.9.4
 Requires PHP: 5.3.3
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,8 +59,11 @@ If you enable user lock-in (when random colors are enabled), each user will have
 
 == Changelog ==
 
+== 2.1.2 ==
+* Bugfix: Fixed WP-Admin issues in WordPress versions 4.9.x
+
 == 2.1.1 ==
-*Fixed Synthax Error on servers running PHP 5.3.x
+* Bugfix: Fixed Synthax Error on servers running PHP 5.3.x
 
 == 2.1 ==
 * Improvement: Improved color randomization functions
