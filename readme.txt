@@ -59,13 +59,13 @@ If you enable user lock-in (when random colors are enabled), each user will have
 
 == Changelog ==
 
-== 2.1.2 ==
+= 2.1.2 =
 * Bugfix: Fixed WP-Admin issues in WordPress versions 4.9.x
 
-== 2.1.1 ==
+= 2.1.1 =
 * Bugfix: Fixed Synthax Error on servers running PHP 5.3.x
 
-== 2.1 ==
+= 2.1 =
 * Improvement: Improved color randomization functions
 * New Feature: Colors are now calculated from e-mail hash
 
