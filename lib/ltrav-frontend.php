@@ -101,7 +101,27 @@ class SGI_LtrAv_Frontend
 	private function generate_css($style_opts,$font_opts)
 	{
 
-		$css = '';
+		$css = '
+			#wp-toolbar .sgi-letter-avatar {
+			    display: inline-block;
+			    margin-left: 10px;
+			    margin-top: 10px;
+			    height: 16px !important;
+			    width: 16px !important;
+			    margin: -4px 0 0 6px;
+			    line-height: 24px !important;
+			}
+
+			#wp-toolbar .sgi-letter-avatar > span {
+
+				line-height: 16px;
+				font-size: 11px;
+				text-align: center;
+				display: block;
+				
+
+			}
+		';
 
 		if (!$style_opts['rand_color']) :
 
@@ -336,6 +356,8 @@ class SGI_LtrAv_Frontend
 	{
 
 		global $comment;
+
+
 
 		if ( is_admin() && !is_singular() && empty($comment))
 			return $avatar;
