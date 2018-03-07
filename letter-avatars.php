@@ -2,7 +2,7 @@
 /*
 Plugin Name: Letter Avatars
 Description: Letter Avatars enable you to use Letters from commenters names instead of generic avatars.
-Version: 2.1
+Version: 2.1.1
 Author: Sibin Grasic
 Author URI: http://sgi.io
 Text Domain: letter-avatars
@@ -32,7 +32,7 @@ if ( !defined( 'SGI_LTRAV_PATH' ) )
 	define( 'SGI_LTRAV_PATH', plugin_dir_path( SGI_LTRAV_FILE ) );
 
 /* Define internal version for possible update changes */
-define ('SGI_LTRAV_VERSION', '2.0.1');
+define ('SGI_LTRAV_VERSION', '2.1.1');
 
 /* Load Up the text domain */
 function sgi_ltrav_load_textdomain()

@@ -48,7 +48,8 @@ class SGI_LtrAv_Frontend
 					'gfont_style'  => '',
 					'font_size'	   => '14',
 				)
-		));
+			)
+		);
 
 		$this->opts = $ltrav_opts;
 
@@ -96,7 +97,6 @@ class SGI_LtrAv_Frontend
 	 * @return string - Compiled css for the plugin
 	 * @author Sibin Grasic
 	 * @since 1.0
-	 * @todo Improve and replace massive switch block for gfont options
 	 */
 	private function generate_css($style_opts,$font_opts)
 	{
@@ -105,105 +105,47 @@ class SGI_LtrAv_Frontend
 
 		if (!$style_opts['rand_color']) :
 
-			$css = 
-			"
-			.sgi-letter-avatar{
-				background-color:{$style_opts['bg_color']};
-			}
-			.sgi-letter-avatar > span{
-				color:{$style_opts['color']};
-			}
-			";
-		endif;
+			$css = sprintf(
+				"
+				.sgi-letter-avatar{
+					background-color:%s;
+				}
+				.sgi-letter-avatar > span{
+					color:%s;
+				}",
+				$style_opts['bg_color'],
+				$style_opts['color']
+			);
 
-		$padding = str_replace(' ','px ',$style_opts['padding']).'px';
+		endif;
 
 		if ($font_opts['load_gfont']) :
 
 			$gfont = "font-family:\"{$font_opts['font_name']}\";\n";
 
-			switch ($font_opts['gfont_style']) :
-				case '100' :
-					$gfont .=
-					"
-					font-weight:100;\n
-					";
-					break;
-				case '100italic' :
-					$gfont .=
-					"
-					font-weight:100;\n
-					font-style: italic;
-					";
-					break;
-				case '300' :
-					$gfont .=
-					"
-					font-weight:300;\n
-					";
-					break;
-				case '300italic' :
-					$gfont .=
-					"
-					font-weight:300;\n
-					font-style: italic;
-					";
-					break;
-				case 'regular' :
-					$gfont .=
-					"
-					font-weight:400;
-					";
-					break;
-				case 'italic' :
-					$gfont .=
-					"
-					font-weight:400;
-					font-style: italic;
-					";
-					break;
-				case '500' :
-					$gfont .=
-					"
-					font-weight:500;\n
-					";
-					break;
-				case '500italic' :
-					$gfont .=
-					"
-					font-weight:500;\n
-					font-style: italic;
-					";
-					break;
-				case '700' :
-					$gfont .=
-					"
-					font-weight:700;\n
-					";
-					break;
-				case '700italic' :
-					$gfont .=
-					"
-					font-weight:700;\n
-					font-style: italic;
-					";
-					break;
-				case '900' :
-					$gfont .=
-					"
-					font-weight:900;\n
-					";
-					break;
-				case '900italic' :
-					$gfont .=
-					"
-					font-weight:900;\n
-					font-style: italic;
-					";
-					break;
-			endswitch;
+			$gfont_style = $font_opts['gfont_style'];
 
+			$gfont_style = ($gfont_style == 'regular') ? '400' : $gfont_style;
+			$gfont_style = ($gfont_style == 'italic') ? '400italic' : $gfont_style;
+
+			if (strlen($gfont_style) > 3) :
+
+				$weight = substr($gfont_style, 0, 3);
+				$style = substr($gfont_style, 3);
+
+			else :
+
+				$weight = $gfont_style;
+				$style  = 'regular';
+
+			endif;
 			
+			$gfont .= sprintf(
+				"font-weight:%s;\n
+				font-style: %s;",
+				$weight,
+				$style
+			);
 
 		else :
 
@@ -211,18 +153,18 @@ class SGI_LtrAv_Frontend
 
 		endif;
 
-		$css .=
-		"
-		.sgi-letter-avatar{
-			text-align:center;
-		}
-		.sgi-letter-avatar > span{
-			display:block;
-			padding:{$padding};
-			font-size:{$font_opts['font_size']}px;
-			{$gfont}
-		}
-		";
+		$css .= sprintf(
+			".sgi-letter-avatar{
+				text-align:center;
+			}
+			.sgi-letter-avatar > span{
+				display:block;
+				font-size:%spx;
+				%s
+			}",
+			$font_opts['font_size'],
+			$gfont
+		);
 
 		return $css;
 	}
@@ -489,9 +431,16 @@ class SGI_LtrAv_Frontend
 	    $m = $V*(1 - $S);
 	    $x = $V*(1 - $S*(1-$H));
 	    $y = $V*(1 - $S*$H);
-	    $a = [[$V, $x, $m], [$y, $V, $m],
-	          [$m, $V, $x], [$m, $y, $V],
-	          [$x, $m, $V], [$V, $m, $y]][$h];
+	    $a = array(
+	    	array($V, $x, $m),
+	    	array($y, $V, $m),
+    	    array($m, $V, $x),
+    	    array($m, $y, $V),
+	        array($x, $m, $V),
+	        array($V, $m, $y)
+    	);
+
+    	$a = $a[$h];
 
     	return sprintf("#%02X%02X%02X", $a[0], $a[1], $a[2]);
 
