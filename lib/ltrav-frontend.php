@@ -44,6 +44,7 @@ class SGI_LtrAv_Frontend
 				),
 				'font'		   => array(
 					'load_gfont'   => true,
+					'use_css'	   => true,
 					'font_name'	   => 'Roboto',
 					'gfont_style'  => '',
 					'font_size'	   => '14',
@@ -118,7 +119,7 @@ class SGI_LtrAv_Frontend
 				font-size: 11px;
 				text-align: center;
 				display: block;
-				
+
 
 			}
 		';
@@ -139,7 +140,7 @@ class SGI_LtrAv_Frontend
 
 		endif;
 
-		if ($font_opts['load_gfont']) :
+		if ($font_opts['use_css']) :
 
 			$gfont = "font-family:\"{$font_opts['font_name']}\";\n";
 
@@ -355,17 +356,33 @@ class SGI_LtrAv_Frontend
 	public function make_letter_avatar($avatar, $id_or_email, $args )
 	{
 
-		global $comment;
+		if ($id_or_email instanceof WP_Comment) :
 
+			global $comment;
 
+			$letter = mb_substr( $comment->comment_author, 0, 1 );
+
+		else :
+
+			$user = get_user_by('ID', $id_or_email);
+
+			if ($user->first_name == '') :
+
+				$letter = mb_substr( $user->user_email, 0, 1 );
+
+			else :
+
+				$letter = mb_substr( $user->first_name, 0, 1 );
+
+			endif;
+
+		endif;
 
 		if ( is_admin() && !is_singular() && empty($comment))
 			return $avatar;
 
 		if ($this->validate_gravatar( $id_or_email, $args ) && $this->opts['use_gravatar'])
 			return $avatar;
-
-		$letter = mb_substr( $comment->comment_author, 0, 1 );
 
 		$user_uid = $this->process_user_identifier($id_or_email);
 

@@ -42,10 +42,15 @@
 
     });
 
-    $('#ltrav-gfont-select').chosen();
+    $('#ltrav-gfont-select').select2({
+        placeholder: "Select a font",
+    });
 
-    $('#ltrav-gfont-select').on('change',function(evt,params){
-    	var font_name = params.selected;
+    $('#ltrav-gfont-select').on('select2:select',function(evt){
+
+        //console.log(evt);
+
+    	var font_name = evt.params.data.id;
 
     	var variants = $('#ltrav-gfont-select option[value="'+font_name+'"]').attr('data-var');
     	variants = variants.split(',');

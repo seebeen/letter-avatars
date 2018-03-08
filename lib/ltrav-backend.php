@@ -31,7 +31,7 @@ Class SGI_LtrAv_Backend
 	/**
 	 * Letter Avatars Admin constructor
 	 * 
-	 * Constructro first checks if plugin version exists in DB. If this is the first activation, plugin adds version info to the DB with autoload option set to false
+	 * Constructor first checks if plugin version exists in DB. If this is the first activation, plugin adds version info to the DB with autoload option set to false
 	 * In that manner we can easily change plugin options, and add further defaults across versions, and preserve compatibility
 	 * @return void
 	 * @author Sibin Grasic
@@ -67,6 +67,7 @@ Class SGI_LtrAv_Backend
 				),
 				'font'		   => array(
 					'load_gfont'   => true,
+					'use_css'	   => true,
 					'font_name'	   => 'Roboto',
 					'gfont_style'  => '',
 					'font_size'	   => '14',
@@ -237,6 +238,16 @@ Class SGI_LtrAv_Backend
 			'sgi_ltrav_gfont',
 			$this->opts['font']
 		);
+
+		add_settings_field(
+			'sgi_ltrav_style_use_css',
+			__('Load CSS','letter-avatars'),
+			array(&$this, 'use_css_callback'),
+			'sgi-letter-avatars',
+			'sgi_ltrav_gfont',
+			$this->opts['font']
+		);
+
 
 		add_settings_field(
 			'sgi_ltrav_style_gfont_select',
@@ -410,6 +421,26 @@ Class SGI_LtrAv_Backend
 		);
 
 	}
+	/**
+	 * 
+	 * @param array $font_opts 
+	 * @since 2.2
+	 * @return void
+	 */
+	public function use_css_callback($font_opts)
+	{
+
+		printf(
+			'<label class="css-lock" for="sgi_ltrav_opts[font][use_css]">
+				<input type="checkbox" name="sgi_ltrav_opts[font][use_css]" %s> %s
+			</label>
+			<p class="description">%s</p>',
+			checked($font_opts['use_css'],true, false),
+			__('Use Google Font CSS','letter-avatars'),
+			__('If you check this option, Google Font CSS will be printed even if you don\'t load Google Font','letter-avatars')
+		);
+
+	}
 
 	/**
 	 * @param type $font_opts 
@@ -467,7 +498,7 @@ Class SGI_LtrAv_Backend
 
 		$sel_font_array = null;
 
-		$html .= '<select id="ltrav-gfont-select" name="sgi_ltrav_opts[font][font_name]">';
+		$html .= '<select id="ltrav-gfont-select" name="sgi_ltrav_opts[font][font_name]"><option></option>';
 
 		foreach ($font_list['items'] as $font ):
 
@@ -510,25 +541,47 @@ Class SGI_LtrAv_Backend
 	}
 
 	/**
-	 * Function that gets the complete google fonts list
+	 * Function that gets the complete google fonts list.
+	 * We first check if we have the font list in a transient. If not it will be fetched from google.
 	 * @return array - JSON decoded font list from google server
 	 * @author Sibin Grasic
 	 * @since 1.0
-	 * @todo Add transient caching to prevent google api abuse / overload
 	 */
 	private function get_google_font_list()
 	{
 		$url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyC2XWzS33ZIlkC17s5GEX31ltIjOffyP5o';
 
-		$font_list = wp_remote_get($url);
+		$font_list = get_transient('sgi_ltraf_gfonts');
 
-		if (!is_wp_error( $font_list )) :
-			$font_list = $font_list['body'];
+		if ($font_list === false) :
+
+			$font_list = wp_remote_get($url);
+
+			if (!is_wp_error( $font_list )) :
+
+				$font_list = $font_list['body'];
+
+				set_transient('sgi_ltrav_gfonts', $font_list, (60*60*24));
+
+				echo '<!-- Cache miss -->';
+
+				return json_decode($font_list,true);
+
+			else :
+
+				return false;
+
+			endif;
+
 		else :
-			$font_list = false;
+
+			echo '<!-- Cache hit -->';
+
+			return json_decode($font_list, true);
+
 		endif;
 
-		return json_decode($font_list,true);
+		
 
 	}
 
@@ -568,6 +621,12 @@ Class SGI_LtrAv_Backend
 			$opts['font']['load_gfont'] = false;
 		endif;
 
+		if (isset($opts['font']['use_css'])) :
+			$opts['font']['use_css'] = true;
+		else :
+			$opts['font']['use_csss'] = false;
+		endif;
+
 		$opts['style']['padding'] = strtr($opts['style']['padding'],array('px' => ''));
 
 		if ($opts['font']['gfont_style'] == '') :
@@ -593,15 +652,15 @@ Class SGI_LtrAv_Backend
 		if ( ($hook !== 'options-general.php') && ($_GET['page'] !== 'sgi-letter-avatars') )
 			return;
 
-		wp_register_style( 'ltrav-admin-chosen', plugins_url('assets/css/chosen.min.css',SGI_LTRAV_BASENAME), null, SGI_LTRAV_VERSION );
+		wp_register_style( 'ltrav-admin-select2', plugins_url('assets/css/select2.min.css',SGI_LTRAV_BASENAME), null, SGI_LTRAV_VERSION );
 
-		wp_enqueue_style('ltrav-admin-chosen');
+		wp_enqueue_style('ltrav-admin-select2');
 		wp_enqueue_style('wp-color-picker');
 
-		wp_register_script( 'ltrav-admin-chosen-js', plugins_url( "assets/js/chosen.jquery.min.js", SGI_LTRAV_BASENAME ), array('jquery'), SGI_LTRAV_VERSION, true);
+		wp_register_script( 'ltrav-admin-select2-js', plugins_url( "assets/js/select2.min.js", SGI_LTRAV_BASENAME ), array('jquery'), SGI_LTRAV_VERSION, true);
 		wp_register_script( 'ltrav-admin-js', plugins_url( "assets/js/ltrav-admin.js", SGI_LTRAV_BASENAME ), array('jquery', 'wp-color-picker'), SGI_LTRAV_VERSION, true);
 
-		wp_enqueue_script('ltrav-admin-chosen-js');
+		wp_enqueue_script('ltrav-admin-select2-js');
 		wp_enqueue_script('ltrav-admin-js');
 	}
 

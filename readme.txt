@@ -5,7 +5,7 @@ Tags: letter, avatars, custom-avatar, gravatar, comment, comments
 Requires at least: 3.8
 Tested up to: 4.9.4
 Requires PHP: 5.3.3
-Stable tag: 2.1.2
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,14 @@ If you enable user lock-in (when random colors are enabled), each user will have
 
 == Changelog ==
 
+= 2.2 =
+* New Feature: Load Google Font CSS without loading google font
+* Improvement: Moved to select2 library for Google Font selection
+* Improvement: Google Fonts selection is now cached, improving wp-admin speed
+* Bugfix: Fixed the display of Letter Avatars in admin-bar
+* Bugfix: Fixed Avatars not displaying properly in some scenarios
+* Bugfix: Fixed Font list not showing up randomly in admin settings
+
 = 2.1.2 =
 * Bugfix: Fixed WP-Admin issues in WordPress versions 4.9.x
 
@@ -66,8 +74,8 @@ If you enable user lock-in (when random colors are enabled), each user will have
 * Bugfix: Fixed Synthax Error on servers running PHP 5.3.x
 
 = 2.1 =
-* Improvement: Improved color randomization functions
 * New Feature: Colors are now calculated from e-mail hash
+* Improvement: Improved color randomization functions
 
 = 2.0 =
 * **Fully reworked codebase**
@@ -82,12 +90,12 @@ If you enable user lock-in (when random colors are enabled), each user will have
 * Many more performance and stability fixes
 
 = 1.1 =
-* Added hook for style loading
-* Added hook for plugin options
-* Improved gravatar detection
-* Improved Theme / Plugin compatibility
-* Improved performance
-* Added PHPDoc to all classes / functions
+* Improvement: Added hook for style loading
+* Improvement: Added hook for plugin options
+* Improvement: Better Gravatar detection
+* Improvement: Better Theme / Plugin compatibility
+* Improvement: Much better performance
+* Improvement: Added PHPDoc to all classes / functions
 
 = 1.0 =
 * Initial release
