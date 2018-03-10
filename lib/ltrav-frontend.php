@@ -15,13 +15,32 @@
  */
 class SGI_LtrAv_Frontend
 {
+
+	/**
+	 * @var Array - Plugin options
+	 * @since 1.0
+	 */
 	private $opts;
 
+	/**
+	 * @var Array - Already locked colors if user lock-in is enabled
+	 * @since 2.0
+	 */
 	private $locked_colors;
 
+	/**
+	 * @var array - Array of used colors for letter avatars
+	 * @since 2.0
+	 */
 	private $used_colors;
 
 	private $load_css;
+
+	/**
+	 * @var bool - Flag which defines buddypress usage
+	 * @since 2.5
+	 */
+	private $with_buddypress;
 
 	/**
 	 * Class Constructor
@@ -47,6 +66,7 @@ class SGI_LtrAv_Frontend
 					'use_css'	   => true,
 					'font_name'	   => 'Roboto',
 					'gfont_style'  => '',
+					'auto_size'	   => true,
 					'font_size'	   => '14',
 				)
 			)
@@ -62,11 +82,20 @@ class SGI_LtrAv_Frontend
 		 */
 		$this->load_css = apply_filters('sgi/ltrav/load_styles',true);
 
+
 		//add styles
 		add_action('wp_head',array(&$this,'add_inline_styles'),20);
 		add_action('wp_enqueue_scripts', array(&$this,'add_gfont_css'),20);
 
-		add_filter('pre_get_avatar',array(&$this,'make_letter_avatar'),10,3);
+		add_filter('pre_get_avatar',array(&$this,'override_avatar'),10,3);
+
+		if (class_exists('BuddyPress')) :
+
+			$this->with_buddypress = true;
+			add_filter('bp_core_fetch_avatar',array(&$this,'override_bp_avatar'),10,9);
+
+		endif;
+		
 	}
 
 	public function add_inline_styles()
@@ -102,7 +131,19 @@ class SGI_LtrAv_Frontend
 	private function generate_css($style_opts,$font_opts)
 	{
 
-		$css = '
+		$css = '';
+
+		if ($this->with_buddypress) :
+
+			$css .= '#buddypress ul.item-list li .sgi-letter-avatar {
+				float:left;
+				margin:0 10px 0 0;
+			}';
+
+		endif;
+
+
+		$css .= '
 			#wp-toolbar .sgi-letter-avatar {
 			    display: inline-block;
 			    margin-left: 10px;
@@ -115,8 +156,8 @@ class SGI_LtrAv_Frontend
 
 			#wp-toolbar .sgi-letter-avatar > span {
 
-				line-height: 16px;
-				font-size: 11px;
+				line-height: 16px !important;
+				font-size: 11px !important;
 				text-align: center;
 				display: block;
 
@@ -190,6 +231,12 @@ class SGI_LtrAv_Frontend
 		return $css;
 	}
 
+	/**
+	 * Description
+	 * @param type $id_or_email 
+	 * @since 2.1
+	 * @return type
+	 */
 	function process_user_identifier($id_or_email)
 	{
 		if ( is_numeric( $id_or_email ) ) :
@@ -345,15 +392,16 @@ class SGI_LtrAv_Frontend
 	}
 
 	/**
+	 * 
 	 * Main plugin function which overrides the get_avatar call
 	 * @param string $avatar - HTML for the avatar
 	 * @param string $id_or_email - User ID or e-mail
 	 * @param array $args - Default arguments for avatar display
-	 * @return string - Avatar HTML
 	 * @author Sibin Grasic
-	 * @since 1.0
+	 * @since 2.5
+	 * @return string - Avatar HTML
 	 */
-	public function make_letter_avatar($avatar, $id_or_email, $args )
+	public function override_avatar($avatar, $id_or_email, $args)
 	{
 
 		if ($id_or_email instanceof WP_Comment) :
@@ -386,6 +434,114 @@ class SGI_LtrAv_Frontend
 
 		$user_uid = $this->process_user_identifier($id_or_email);
 
+		return $this->make_letter_avatar($user_uid, $letter, $args);
+
+	}
+
+	/**
+	 * Function that overrides BuddyPress avatar
+	 * @param type $html 
+	 * @param type $params 
+	 * @param type $item_id 
+	 * @param type $avatar_dir 
+	 * @param type $html_css_id 
+	 * @param type $html_width 
+	 * @param type $html_height 
+	 * @param type $avatar_folder_url 
+	 * @param type $avatar_folder_dir 
+	 * @since 2.5
+	 * @return string - Complete HTML for letter avatar, or original avatar if set
+	 */
+	public function override_bp_avatar($html, $params, $item_id, $avatar_dir, $html_css_id, $html_width, $html_height, $avatar_folder_url, $avatar_folder_dir)
+	{
+		
+		$object = $params['object'];
+
+		switch ($object) :
+
+			case 'user' :
+
+				if (empty($item_id) || $item_id == 0) :
+
+					if (is_user_logged_in()) :
+
+						$item_id = get_current_user_id();
+
+					else :
+
+						return $html;
+
+					endif;
+
+				endif;
+
+				$user = get_user_by('ID', $item_id);
+
+				if ($user->first_name == '') :
+
+					$letter = mb_substr( $user->user_email, 0, 1 );
+
+				else :
+
+					$letter = mb_substr( $user->first_name, 0, 1 );
+
+				endif;
+
+				if ($this->validate_gravatar( $user, $params ) && $this->opts['use_gravatar'])
+					return $html;
+
+				if (strpos($html, get_option('siteurl')) !== false)
+					return $html;
+
+				return $this->make_letter_avatar(
+					$user->data->user_email,
+					$letter,
+					array(
+						'height' => $params['height'],
+						'width'  => $params['width']
+					)
+				);
+
+			break;
+
+			case 'group' :
+
+				if (strpos($html, 'mystery-group') === false)
+					return $html;
+
+				$group = groups_get_group(array(
+					'group_id' => $item_id
+				));
+
+				$letter = mb_substr($group->name, 0, 1);
+
+				return $this->make_letter_avatar(
+					$group->name,
+					$letter,
+					array(
+						'height' => $params['height'],
+						'width'	 => $params['width']
+					)
+				);
+
+			break;
+
+
+
+		endswitch;
+
+
+		return $html;
+	}
+
+	/**
+	 * Function that creates letter avatars
+	 * @param string $user_uid - user e-mail
+	 * @since 1.0
+	 */
+	public function make_letter_avatar($user_uid, $letter, $args)
+	{
+
 		if ($this->opts['style']['rand_color']) :
 
 			if ($this->opts['style']['lock_color'] && isset($this->locked_colors[$user_uid])) :
@@ -412,6 +568,12 @@ class SGI_LtrAv_Frontend
 
 		endif;
 
+		$font_style = sprintf(
+			'style="%s %s"',
+			($lt_color) ? "color: {$lt_color}; " : '',
+			($this->opts['font']['auto_size']) ? 'font-size: '.round($args['height'] * 0.75,0)."px" : ''
+		);
+
 		$avatar = sprintf(
 			'<div class="sgi-letter-avatar avatar avatar-%s" style="line-height:%spx; height:%spx; width:%spx; %s">
 				<span %s>%s</span>
@@ -421,7 +583,7 @@ class SGI_LtrAv_Frontend
 			$args['height'],
 			$args['width'],
 			($bg_color) ? "background-color: {$bg_color};" : '',
-			($lt_color) ? "style='color: {$lt_color};'" : '',
+			$font_style,
 			$letter
 		);
 

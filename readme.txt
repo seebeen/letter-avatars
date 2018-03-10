@@ -2,10 +2,10 @@
 Contributors: seebeen
 Donate link: https://sgi.io/donate
 Tags: letter, avatars, custom-avatar, gravatar, comment, comments
-Requires at least: 3.8
+Requires at least: 4.0
 Tested up to: 4.9.4
 Requires PHP: 5.3.3
-Stable tag: 2.2
+Stable tag: 2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,7 @@ Letter Avatars does not use any images, scripts, or font-icons. All letters will
 * Stylish - You can change the background and letter colors or you can randomize them for all the avatars
 * Lightweight - Plugin does not use any external stylesheet, image, or js files. It only adds a small inline css in your header
 * Highly compatible - You don't have to edit your theme / plugin files, it works automatically and plays nice with other plugins
+* **Works with BuddyPress** - Users and groups without gravatar / local avatar will use Letter Avatars
 
 == Installation ==
 
@@ -41,13 +42,22 @@ Yes you can. By default, Letter Avatars are used only for users without gravatar
 
 By default, Letter Avatars will be displayed in your theme font, but you can change that in plugin settings.
 
-= Does this plugin work with bbPress / BuddyPress? / wpDiscuz =
+= Does this plugin work with BuddyPress? =
 
-At the moment, no. This feature is planned and will be implemented in one of the next versions
+Yes it does, since version 2.5
+
+= Does this plugin work with bbPress / wpDiscuz =
+
+At the moment, no. This feature is planned for versions 2.7 and 2.8. coming out in April 2018
 
 = What does the user lock-in option do? =
 
 If you enable user lock-in (when random colors are enabled), each user will have his own unique color which will be used for all the comments.
+
+= How does the Font Auto Size option work?
+
+If you enable the auto size functionality, letter size will be 75% of the avatar size.
+I.E. If the avatar size is 100px, font size will be 75px.
 
 == Screenshots ==
 
@@ -58,6 +68,18 @@ If you enable user lock-in (when random colors are enabled), each user will have
 3. Gravatars displayed alongside letter avatars
 
 == Changelog ==
+
+= 2.5 =
+* New Feature: **BuddyPress support**
+* New Feature: Automatic font size - Option to calculate font size automatically by avatar size
+* Improvement: Optimized gravatar detection and CSS processing
+* Improvement: Optimized performance on posts with many comments
+
+= 2.4 =
+* Internal beta version
+
+= 2.3 =
+* Internal alpha version
 
 = 2.2 =
 * New Feature: Load Google Font CSS without loading google font

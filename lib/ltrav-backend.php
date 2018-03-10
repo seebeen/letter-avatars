@@ -70,6 +70,7 @@ Class SGI_LtrAv_Backend
 					'use_css'	   => true,
 					'font_name'	   => 'Roboto',
 					'gfont_style'  => '',
+					'auto_size'	   => true,
 					'font_size'	   => '14',
 				)
 		));
@@ -247,7 +248,6 @@ Class SGI_LtrAv_Backend
 			'sgi_ltrav_gfont',
 			$this->opts['font']
 		);
-
 
 		add_settings_field(
 			'sgi_ltrav_style_gfont_select',
@@ -467,8 +467,21 @@ Class SGI_LtrAv_Backend
 	{
 
 		printf(
-			'<input type="number" class="small-text" name="sgi_ltrav_opts[font][font_size]" value="%s">
+			'<label for="sgi_ltrav_opts[font][auto_size]">
+				<input class="font-size-lock" type="checkbox" name="sgi_ltrav_opts[font][auto_size]" %s> %s
+			</label>
 			<p class="description">%s</p>',
+			checked($font_opts['auto_size'],true, false),
+			__('Automatic Font Size','letter-avatars'),
+			__('If you check this option, font size will be determined automatically by avatar size','letter-avatars')
+		);
+
+		printf(
+			'<div style="margin-top:10px; display: %s" class="hide-if-auto">
+				<input type="number" class="small-text" name="sgi_ltrav_opts[font][font_size]" value="%s">
+				<p class="description">%s</p>
+			</div>',
+			($font_opts['auto_size']) ? 'none' : 'block',
 			$font_opts['font_size'],
 			__('Font size - in px','letter-avatars')
 		);
@@ -624,7 +637,13 @@ Class SGI_LtrAv_Backend
 		if (isset($opts['font']['use_css'])) :
 			$opts['font']['use_css'] = true;
 		else :
-			$opts['font']['use_csss'] = false;
+			$opts['font']['use_css'] = false;
+		endif;
+
+		if (isset($opts['font']['auto_size'])) :
+			$opts['font']['auto_size'] = true;
+		else :
+			$opts['font']['auto_size'] = false;
 		endif;
 
 		$opts['style']['padding'] = strtr($opts['style']['padding'],array('px' => ''));

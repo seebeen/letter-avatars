@@ -26,6 +26,20 @@
 
     });
 
+    $('.font-size-lock').on('change', function() {
+
+        if ($(this).is(':checked')) {
+
+            $('.hide-if-auto').css('display','none');
+
+        } else {
+
+            $('.hide-if-auto').css('display','block');
+
+        }
+
+    });
+
     $('.randomize').on('change', function() {
 
         if ($(this).is(':checked')) {
