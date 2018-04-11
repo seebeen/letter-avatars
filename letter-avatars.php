@@ -2,7 +2,7 @@
 /*
 Plugin Name: Letter Avatars
 Description: Letter Avatars enable you to use Letters from commenters names instead of generic avatars.
-Version: 2.5
+Version: 2.6
 Author: Sibin Grasic
 Author URI: http://sgi.io
 Text Domain: letter-avatars
@@ -10,7 +10,7 @@ Text Domain: letter-avatars
 
 /**
  * 
- * @package SGI\SSR
+ * @package SGI\LTRAV
  */
 
 /* Prevent Direct access */
@@ -46,7 +46,7 @@ if ( version_compare( PHP_VERSION, '5.3.3', '<' ) && version_compare(WP_VERSION,
 	if (is_admin()) :
 		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 		deactivate_plugins( __FILE__ );
-		wp_die(__('Letter Avatars plugin requires WordPress 3.8 and PHP 5.3 or greater. The plugin has now disabled itself','letter-avatars'));
+		wp_die(__('Letter Avatars plugin requires WordPress 4.0 and PHP 5.3 or greater. The plugin has now disabled itself','letter-avatars'));
 	endif;
 endif;
 

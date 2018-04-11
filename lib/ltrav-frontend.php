@@ -10,8 +10,6 @@
  * @subpackage Frontend Interfaces
  * @author Sibin Grasic
  * @since 1.0
- * @var opts - plugin options
- * @var load_css - Flag that determins style loading
  */
 class SGI_LtrAv_Frontend
 {
@@ -34,7 +32,10 @@ class SGI_LtrAv_Frontend
 	 */
 	private $used_colors;
 
-	private $load_css;
+	/**
+	 * @var boolean - Flag which determines if we should use caching for avatar checks
+	 */
+	private $use_cache;
 
 	/**
 	 * @var bool - Flag which defines buddypress usage
@@ -80,7 +81,13 @@ class SGI_LtrAv_Frontend
 		 * @since 1.1
 		 * @param boolean - boolean flag which determines if we should load inline styles
 		 */
-		$this->load_css = apply_filters('sgi/ltrav/load_styles',true);
+		$this->load_css = apply_filters('sgi/ltrav/load_styles', true);
+
+		/**
+		 * @since 2.6
+		 * @param boolean - flag which determines if we should use caching for avatar checks
+		 */
+		$this->use_cache = apply_filters('sgi/ltrav/use_cache', true);
 
 
 		//add styles
@@ -310,58 +317,65 @@ class SGI_LtrAv_Frontend
 			}
 		}
 
-		if ( $email_hash ) {
-			$args['found_avatar'] = true;
-			$gravatar_server = hexdec( $email_hash[0] ) % 3;
-		} else {
-			$gravatar_server = rand( 0, 2 );
-		}
+		//Cache usage check
+		if ($this->use_cache) :
 
-		$url_args = array(
-			's' => $args['size'],
-			'd' => '404',
-			'f' => $args['force_default'] ? 'y' : false,
-			'r' => $args['rating'],
-		);
+			$data = wp_cache_get("ltrav_{$email_hash}",'sgi_ltrav');
 
-		if ( is_ssl() ) {
-			$url = 'https://secure.gravatar.com/avatar/' . $email_hash;
-		} else {
-			$url = sprintf( 'http://%d.gravatar.com/avatar/%s', $gravatar_server, $email_hash );
-		}
+		else :
 
-		$url = add_query_arg(
-			rawurlencode_deep( array_filter( $url_args ) ),
-			set_url_scheme( $url, $args['scheme'] )
-		);
+			$data = false;
 
-		$response = wp_remote_head($url);
-	        
-        if( is_wp_error($response) ) :
-            $data = 'not200';
-        else :
-            $data = $response['response']['code'];
-        endif;
-	    
-	    $data = wp_cache_get($email_hash);
-	    if (false === $data) :
+		endif;
 
-	        $response = wp_remote_head($url);
-	        
+		/*
+		This is really important. If we're using object caching. Entire avatar check block with gravatar won't happen until cache expires.
+		This shaves off a lot of load time on posts / pages with a lot of comments.
+		*/
+		if ($data === false) : //Cache miss
+
+			if ( $email_hash ) {
+				$args['found_avatar'] = true;
+				$gravatar_server = hexdec( $email_hash[0] ) % 3;
+			} else {
+				$gravatar_server = rand( 0, 2 );
+			}
+
+			$url_args = array(
+				's' => $args['size'],
+				'd' => '404',
+				'f' => $args['force_default'] ? 'y' : false,
+				'r' => $args['rating'],
+			);
+
+			if ( is_ssl() ) {
+				$url = 'https://secure.gravatar.com/avatar/' . $email_hash;
+			} else {
+				$url = sprintf( 'http://%d.gravatar.com/avatar/%s', $gravatar_server, $email_hash );
+			}
+
+			$url = add_query_arg(
+				rawurlencode_deep( array_filter( $url_args ) ),
+				set_url_scheme( $url, $args['scheme'] )
+			);
+
+			$response = wp_remote_head($url);
+		        
 	        if( is_wp_error($response) ) :
-	            $data = 'not200';
+	            $data = 404;
 	        else :
 	            $data = $response['response']['code'];
 	        endif;
-	        wp_cache_set($email_hash, $data, $group = '', $expire = 60*5);
+		    
+	        if ($this->use_cache) :
 
-	    endif;
+		    	wp_cache_set("ltrav_{$email_hash}", $data, 'sgi_ltrav', 60*60*12);
 
-	    if ($data == 200) :
-	        return true;
-	    else :
-	  		return false;
-	    endif;
+		    endif;
+		    
+		endif;
+
+		return ($data == 200) ? true : false;
 
 	}
 

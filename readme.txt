@@ -1,11 +1,11 @@
 === Letter Avatars ===
 Contributors: seebeen
 Donate link: https://sgi.io/donate
-Tags: letter, avatars, custom-avatar, gravatar, comment, comments
+Tags: letter, avatars, custom-avatar, gravatar, comment, comments, buddypress-avatar, buddypress, letter-avatar
 Requires at least: 4.0
 Tested up to: 4.9.4
 Requires PHP: 5.3.3
-Stable tag: 2.5
+Stable tag: 2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,13 +61,17 @@ I.E. If the avatar size is 100px, font size will be 75px.
 
 == Screenshots ==
 
-1. Plugin settings page
+1. Gravatars displayed alongside letter avatars
 
-2. Random colored avatars with user lock-in
+2. Plugin settings page
 
-3. Gravatars displayed alongside letter avatars
+3. Random colored avatars with user lock-in
 
 == Changelog ==
+
+= 2.6 =
+* Improvement: Added caching mechanism for gravatar checks
+* Improvement: Fine-tuned gravatar checking mechanism
 
 = 2.5 =
 * New Feature: **BuddyPress support**
