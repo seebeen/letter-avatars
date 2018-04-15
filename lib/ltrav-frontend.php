@@ -666,8 +666,10 @@ class SGI_LtrAv_Frontend
 	 * @param string $user_uid 
 	 * @return string - hex color for avatar background
 	 */
-	private function generate_pretty_random_color($user_uid)
+	private function generate_pretty_random_color($user_uid = false)
 	{
+
+		$user_uid = ($user_uid) ? $user_uid : uniqid();
 
 		$hue = unpack('L', hash('adler32', strtolower($user_uid), true))[1];
 
