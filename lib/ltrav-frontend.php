@@ -282,6 +282,10 @@ class SGI_LtrAv_Frontend
 				$user = get_user_by( 'id', (int) $id_or_email->user_id );
 				$email = get_userdata($user->ID)->user_email;
 
+			else :
+
+				$user = $email = false;
+
 			endif;
 
 			if ( ( ! $user || is_wp_error( $user ) ) && ! empty( $id_or_email->comment_author_email ) ) :
@@ -577,8 +581,8 @@ class SGI_LtrAv_Frontend
 
 		else :
 
-			$bg_style = false;
-			$lt_style = false;
+			$bg_color = $this->opts['style']['bg_color'];
+			$lt_color = $this->opts['style']['color'];
 
 		endif;
 

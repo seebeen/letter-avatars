@@ -51,7 +51,7 @@ Class SGI_LtrAv_Backend
 		else :
 
 			$ltrav_ver = SGI_LTRAV_VERSION;
-			add_option('sgi_ltrav_ver',$ltrav_ver,'no');
+			add_option('sgi_ltrav_ver',$ltrav_ver, '', 'no');
 
 		endif;
 
@@ -646,8 +646,6 @@ Class SGI_LtrAv_Backend
 			$opts['font']['auto_size'] = false;
 		endif;
 
-		$opts['style']['padding'] = strtr($opts['style']['padding'],array('px' => ''));
-
 		if ($opts['font']['gfont_style'] == '') :
 			$opts['font']['gfont_style'] = 'regular';
 		endif;
@@ -668,7 +666,8 @@ Class SGI_LtrAv_Backend
 	 */
 	public function add_admin_scripts($hook)
 	{
-		if ( ($hook !== 'options-general.php') && ($_GET['page'] !== 'sgi-letter-avatars') )
+
+		if ( $hook !== 'settings_page_sgi-letter-avatars' )
 			return;
 
 		wp_register_style( 'ltrav-admin-select2', plugins_url('assets/css/select2.min.css',SGI_LTRAV_BASENAME), null, SGI_LTRAV_VERSION );

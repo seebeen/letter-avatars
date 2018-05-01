@@ -5,7 +5,7 @@ Tags: letter, avatars, custom-avatar, gravatar, comment, comments, buddypress-av
 Requires at least: 4.0
 Tested up to: 4.9.4
 Requires PHP: 5.3.3
-Stable tag: 2.6.1
+Stable tag: 2.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,14 @@ I.E. If the avatar size is 100px, font size will be 75px.
 3. Random colored avatars with user lock-in
 
 == Changelog ==
+
+= 2.6.2 =
+
+* Bugfix: Removed all PHP Notices and Warnings
+* Improvement: Fine-tuned gravatar detection code
+
+= 2.6.1 =
+* Bugfix: Fixed PHP Warning in certain scenarios
 
 = 2.6 =
 * Improvement: Added caching mechanism for gravatar checks
