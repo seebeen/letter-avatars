@@ -32,7 +32,7 @@ if ( !defined( 'SGI_LTRAV_PATH' ) )
 	define( 'SGI_LTRAV_PATH', plugin_dir_path( SGI_LTRAV_FILE ) );
 
 /* Define internal version for possible update changes */
-define ('SGI_LTRAV_VERSION', '2.6.2');
+define ('SGI_LTRAV_VERSION', '2.7');
 
 /* Load Up the text domain */
 function sgi_ltrav_load_textdomain()
@@ -65,8 +65,16 @@ function sgi_ltrav_frontend_init()
 }
 
 
-if (is_admin()) : 
-	add_action('plugins_loaded','sgi_ltrav_backend_init');
-else :
+if (defined( 'DOING_AJAX' )) :
+
 	add_action('init','sgi_ltrav_frontend_init',20);
+
+elseif (is_admin()) :
+
+	add_action('plugins_loaded','sgi_ltrav_backend_init');
+	
+else : 
+
+	add_action('init','sgi_ltrav_frontend_init',20);	
+
 endif;

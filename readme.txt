@@ -3,9 +3,9 @@ Contributors: seebeen
 Donate link: https://sgi.io/donate
 Tags: letter, avatars, custom-avatar, gravatar, comment, comments, buddypress-avatar, buddypress, letter-avatar
 Requires at least: 4.0
-Tested up to: 4.9.4
+Tested up to: 4.9.6
 Requires PHP: 5.3.3
-Stable tag: 2.6.2
+Stable tag: 2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,7 @@ Letter Avatars does not use any images, scripts, or font-icons. All letters will
 * Lightweight - Plugin does not use any external stylesheet, image, or js files. It only adds a small inline css in your header
 * Highly compatible - You don't have to edit your theme / plugin files, it works automatically and plays nice with other plugins
 * **Works with BuddyPress** - Users and groups without gravatar / local avatar will use Letter Avatars
+* **Works with YITH Reviews for WooCommerce** - Avatars in reviews support Letter Avatars
 
 == Installation ==
 
@@ -68,6 +69,11 @@ I.E. If the avatar size is 100px, font size will be 75px.
 3. Random colored avatars with user lock-in
 
 == Changelog ==
+
+= 2.7 =
+
+* New Feature: **YITH Reviews for WooCommerce support**
+* Improvement: Works for comments fetched via ajax
 
 = 2.6.2 =
 

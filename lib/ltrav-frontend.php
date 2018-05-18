@@ -246,6 +246,7 @@ class SGI_LtrAv_Frontend
 	 */
 	function process_user_identifier($id_or_email)
 	{
+
 		if ( is_numeric( $id_or_email ) ) :
 
 			$user = get_user_by( 'id', absint( $id_or_email ) );
@@ -297,6 +298,7 @@ class SGI_LtrAv_Frontend
 		endif;
 
 		return $email;
+		
 	}
 
 	function validate_gravatar($id_or_email, $args) {
@@ -422,9 +424,13 @@ class SGI_LtrAv_Frontend
 	public function override_avatar($avatar, $id_or_email, $args)
 	{
 
-		if ($id_or_email instanceof WP_Comment) :
+		global $comment;
 
-			global $comment;
+		if ( is_email($id_or_email) ) :
+
+			$letter = mb_substr( $id_or_email, 0, 1 );
+
+		elseif ($id_or_email instanceof WP_Comment) :
 
 			$letter = mb_substr( $comment->comment_author, 0, 1 );
 
@@ -444,7 +450,7 @@ class SGI_LtrAv_Frontend
 
 		endif;
 
-		if ( is_admin() && !is_singular() && empty($comment))
+		if ( is_admin() && !is_singular() && empty($comment) && !defined('DOING_AJAX'))
 			return $avatar;
 
 		if ($this->validate_gravatar( $id_or_email, $args ) && $this->opts['use_gravatar'])
