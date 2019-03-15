@@ -57,6 +57,8 @@ class SGI_LtrAv_Frontend
 			array(
 				'use_gravatar' => true,
 				'style' 	   => array(
+					'case'		   => 'uppercase',
+					'shape'		   => 'round',
 					'rand_color'   => false,
 					'lock_color'   => false,
 					'color'		   => '#FFF',
@@ -149,28 +151,31 @@ class SGI_LtrAv_Frontend
 
 		endif;
 
+		if (is_user_logged_in()) :
 
-		$css .= '
-			#wp-toolbar .sgi-letter-avatar {
-			    display: inline-block;
-			    margin-left: 10px;
-			    margin-top: 10px;
-			    height: 16px !important;
-			    width: 16px !important;
-			    margin: -4px 0 0 6px;
-			    line-height: 24px !important;
-			}
+			$css .= '
+				#wp-toolbar .sgi-letter-avatar {
+				    display: inline-block;
+				    margin-left: 10px;
+				    margin-top: 10px;
+				    height: 16px !important;
+				    width: 16px !important;
+				    margin: -4px 0 0 6px;
+				    line-height: 24px !important;
+				}
 
-			#wp-toolbar .sgi-letter-avatar > span {
+				#wp-toolbar .sgi-letter-avatar > span {
 
-				line-height: 16px !important;
-				font-size: 11px !important;
-				text-align: center;
-				display: block;
+					line-height: 16px !important;
+					font-size: 11px !important;
+					text-align: center;
+					display: block;
 
 
-			}
-		';
+				}
+			';
+
+		endif;
 
 		if (!$style_opts['rand_color']) :
 
@@ -222,15 +227,29 @@ class SGI_LtrAv_Frontend
 
 		endif;
 
+		if ($style_opts['shape'] == 'round') :
+
+			$shape = "border-radius: 50% !important;";
+
+		else :
+
+			$shape = "border-radius: 0 !important;";
+
+		endif;
+
 		$css .= sprintf(
 			".sgi-letter-avatar{
 				text-align:center;
+				%s
 			}
 			.sgi-letter-avatar > span{
 				display:block;
+				text-transform: %s;
 				font-size:%spx;
 				%s
 			}",
+			$shape,
+			$style_opts['case'],
 			$font_opts['font_size'],
 			$gfont
 		);
@@ -298,7 +317,7 @@ class SGI_LtrAv_Frontend
 		endif;
 
 		return $email;
-		
+
 	}
 
 	function validate_gravatar($id_or_email, $args) {
@@ -346,6 +365,9 @@ class SGI_LtrAv_Frontend
 			} else {
 				$gravatar_server = rand( 0, 2 );
 			}
+
+			if (!array_key_exists('size',$args))
+				$args['size'] = 200;
 
 			$url_args = array(
 				's' => $args['size'],
@@ -426,7 +448,7 @@ class SGI_LtrAv_Frontend
 
 		global $comment;
 
-		if ( is_email($id_or_email) ) :
+		if ( is_string($id_or_email) && is_email($id_or_email) ) :
 
 			$letter = mb_substr( $id_or_email, 0, 1 );
 
@@ -438,13 +460,21 @@ class SGI_LtrAv_Frontend
 
 			$user = get_user_by('ID', $id_or_email);
 
-			if ($user->first_name == '') :
+			if (!$user || ($user instanceof WP_Error)) :
 
-				$letter = mb_substr( $user->user_email, 0, 1 );
+				$letter = mb_substr( $id_or_email, 0, 1 );
 
 			else :
 
-				$letter = mb_substr( $user->first_name, 0, 1 );
+				if ($user->first_name == '') :
+
+					$letter = mb_substr( $user->user_email, 0, 1 );
+
+				else :
+
+					$letter = mb_substr( $user->first_name, 0, 1 );
+
+				endif;
 
 			endif;
 
@@ -453,8 +483,9 @@ class SGI_LtrAv_Frontend
 		if ( is_admin() && !is_singular() && empty($comment) && !defined('DOING_AJAX'))
 			return $avatar;
 
-		if ($this->validate_gravatar( $id_or_email, $args ) && $this->opts['use_gravatar'])
-			return $avatar;
+		if ($this->opts['use_gravatar'])
+			if ($this->validate_gravatar( $id_or_email, $args ))
+				return $avatar;
 
 		$user_uid = $this->process_user_identifier($id_or_email);
 

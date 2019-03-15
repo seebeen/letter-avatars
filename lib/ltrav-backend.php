@@ -60,14 +60,16 @@ Class SGI_LtrAv_Backend
 			array(
 				'use_gravatar' => true,
 				'style' 	   => array(
+					'case'		   => 'uppercase',
+					'shape'		   => 'round',
 					'rand_color'   => false,
 					'lock_color'   => false,
 					'color'		   => '#FFF',
 					'bg_color'	   => '#000',
 				),
 				'font'		   => array(
-					'load_gfont'   => true,
-					'use_css'	   => true,
+					'load_gfont'   => false,
+					'use_css'	   => false,
 					'font_name'	   => 'Roboto',
 					'gfont_style'  => '',
 					'auto_size'	   => true,
@@ -186,6 +188,24 @@ Class SGI_LtrAv_Backend
 			__('Style Options','letter-avatars'),
 			array(&$this, 'style_section_callback'),
 			'sgi-letter-avatars'
+		);
+
+		add_settings_field(
+			'sgi_ltrav_settings_font_case',
+			__('Font Style','letter-avatars'),
+			array(&$this, 'style_case_callback'),
+			'sgi-letter-avatars',
+			'sgi_ltrav_style',
+			$this->opts['style']
+		);
+
+		add_settings_field(
+			'sgi_ltrav_settings_shape',
+			__('Avatar shape', 'letter-avatars'),
+			array(&$this, 'shape_callback'),
+			'sgi-letter-avatars',
+			'sgi_ltrav_style',
+			$this->opts['style']
 		);
 
 		add_settings_field(
@@ -314,6 +334,52 @@ Class SGI_LtrAv_Backend
 		printf(
 			'<p>%s</p>',
 			__('These options control display options for Letter Avatars')
+		);
+
+	}
+
+	/**
+	 * @since 2.8
+	 * @return type
+	 */
+	public function style_case_callback($style_opts)
+	{
+
+		if (!array_key_exists('case',$style_opts))
+			$style_opts['case'] = 'uppercase';
+
+		printf(
+			'<select name="sgi_ltrav_opts[style][case]">
+				<option value="uppercase" %s>%s</option>
+				<option value="lowercase" %s>%s</option>
+			</select>
+			<p class="description">%s</p>',
+			selected('uppercase', $style_opts['case'], false),
+			__('Uppercase','letter-avatars'),
+			selected('lowercase', $style_opts['case'], false),
+			__('Lowercase','letter-avatars'),
+			__('Select case for your letter avatar. Upper or lower','letter-avatars')
+		);
+
+	}
+
+	public function shape_callback($style_opts)
+	{
+
+		if (!array_key_exists('shape',$style_opts))
+			$style_opts['shape'] = 'square';
+
+		printf(
+			'<select name="sgi_ltrav_opts[style][shape]">
+				<option value="square" %s>%s</option>
+				<option value="round" %s>%s</option>
+			</select>
+			<p class="description">%s</p>',
+			selected('square', $style_opts['shape'], false),
+			__('Square','letter-avatars'),
+			selected('round', $style_opts['shape'], false),
+			__('Round','letter-avatars'),
+			__('Select shape for your letter avatar. Sqare or round','letter-avatars')
 		);
 
 	}
@@ -450,6 +516,9 @@ Class SGI_LtrAv_Backend
 	public function gfont_select_callback($font_opts)
 	{
 
+		if (!array_key_exists('font_name', $font_opts))
+			$font_opts['font_name'] = 'Roboto';
+
 		echo '<div style="display:block">';
 
 		printf (
@@ -501,6 +570,12 @@ Class SGI_LtrAv_Backend
 
 		$font_list = $this->get_google_font_list();
 		$html = '';
+
+		if (!$font_list && !$this->opts['font']['load_gfont'] && !$this->opts['font']['use_css'])
+			return sprintf(
+				'<strong>%s</strong>',
+				__('Google font list will be loaded when you check either of the above options','letter-avatars')
+			);
 
 		if (!$font_list) 
 			return sprintf(
@@ -562,6 +637,10 @@ Class SGI_LtrAv_Backend
 	 */
 	private function get_google_font_list()
 	{
+
+		if (!$this->opts['font']['load_gfont'] && !$this->opts['font']['use_css'])
+			return [];
+
 		$url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyC2XWzS33ZIlkC17s5GEX31ltIjOffyP5o';
 
 		$font_list = get_transient('sgi_ltraf_gfonts');
@@ -609,6 +688,7 @@ Class SGI_LtrAv_Backend
 	 */
 	public function sanitize_opts($opts)
 	{
+		
 
 		if (isset($opts['use_gravatar'])):
 			$opts['use_gravatar'] = true;

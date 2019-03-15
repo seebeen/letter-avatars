@@ -3,9 +3,9 @@ Contributors: seebeen
 Donate link: https://sgi.io/donate
 Tags: letter, avatars, custom-avatar, gravatar, comment, comments, buddypress-avatar, buddypress, letter-avatar
 Requires at least: 4.0
-Tested up to: 4.9.6
+Tested up to: 5.1.1
 Requires PHP: 5.3.3
-Stable tag: 2.7
+Stable tag: 2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,12 @@ I.E. If the avatar size is 100px, font size will be 75px.
 3. Random colored avatars with user lock-in
 
 == Changelog ==
+
+= 2.8 = 
+
+* New feature: Select avatar shape, square or round
+* New feature: Load font CSS without loading Google font
+* Improvement: Better avatar checking
 
 = 2.7 =
 
