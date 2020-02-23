@@ -1,11 +1,11 @@
 === Letter Avatars ===
 Contributors: seebeen
 Donate link: https://sgi.io/donate
-Tags: letter, avatars, custom-avatar, gravatar, comment, comments, buddypress-avatar, buddypress, letter-avatar
-Requires at least: 4.0
-Tested up to: 5.1.1
-Requires PHP: 5.3.3
-Stable tag: 2.8
+Tags: letter, avatars, custom-avatar, gravatar, comment, comments, buddypress-avatar, buddypress, letter-avatar, wp-user-avatar
+Requires at least: 4.8
+Tested up to: 5.3.2
+Requires PHP: 7.0.0
+Stable tag: 3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,7 @@ Letter Avatars does not use any images, scripts, or font-icons. All letters will
 * Highly compatible - You don't have to edit your theme / plugin files, it works automatically and plays nice with other plugins
 * **Works with BuddyPress** - Users and groups without gravatar / local avatar will use Letter Avatars
 * **Works with YITH Reviews for WooCommerce** - Avatars in reviews support Letter Avatars
+* **Works with WP User Avatar** - Users with Custom Avatar will use those, users without avatar will default to Letter Avatar
 
 == Installation ==
 
@@ -37,7 +38,11 @@ Letter Avatars does not use any images, scripts, or font-icons. All letters will
 
 = Can I disable gravatars and use Letter Avatars for all comments? =
 
-Yes you can. By default, Letter Avatars are used only for users without gravatar, but you can change that in user settings.
+Yes you can. By default, Letter Avatars are used only for users without gravatar, but you can change that in plugin settings.
+
+= Does this plugin work with WP User Avatar =
+
+Yes it does, since version 3.0
 
 = Can I change the font for my Avatars? =
 
@@ -49,7 +54,7 @@ Yes it does, since version 2.5
 
 = Does this plugin work with bbPress / wpDiscuz =
 
-At the moment, no. This feature is planned for versions 2.7 and 2.8. coming out in April 2018
+At the moment, no. This feature is planned for versions 3.1 and 3.2. coming out soon
 
 = What does the user lock-in option do? =
 
@@ -69,6 +74,21 @@ I.E. If the avatar size is 100px, font size will be 75px.
 3. Random colored avatars with user lock-in
 
 == Changelog ==
+
+= 3.0 =
+
+* Breaking: Minimum WP Version has been bumped to 4.8
+* Breaking: Minimum PHP Version has been bumped to 7.0
+* New Feature: Added support for WP User Avatar plugin
+* Improvement: Reworked admin settings for better performance
+* Improvement: Complete refactor of the codebase - Moving on to full PSR-12 Compliance
+* Improvement: Improved performance using PHP 7.0 specific tweaks
+* Improvement: Fixed plugin styles
+* Improvement: Reworked plugin CSS to use CSS variables
+* Bugfix: Improved user / e-mail detection in various scenarios
+* Bugfix: Fixed Google Font list not showing in plugin settings
+* Bugfix: Fixed transient caching not working properly on some hosting confgurations
+* Bugfix: Various minor tweaks and changes
 
 = 2.8 = 
 
