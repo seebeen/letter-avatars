@@ -3,7 +3,7 @@
  * Plugin Name: 	  Letter Avatars
  * Plugin URI:  	  https://wordpress.org/plugins/letter-avatars/
  * Description: 	  Letter Avatars enable you to use Letters from commenters names instead of generic avatars.
- * Version: 		  3.0
+ * Version: 		  3.0.1
  * Requires at least: 4.8
  * Requires PHP:      7.0
  * Author: 	 	      Sibin Grasic
@@ -27,7 +27,7 @@ use \SGI\LtrAv\Core\Bootstrap as Letter_Avatars;
 !defined(__NAMESPACE__ . '\PATH') && define(__NAMESPACE__ . '\PATH', plugin_dir_path( FILE ));
 
 // Define internal version
-!defined(__NAMESPACE__ . '\VERSION') && define (__NAMESPACE__ . '\VERSION', '3.0.0');
+!defined(__NAMESPACE__ . '\VERSION') && define (__NAMESPACE__ . '\VERSION', '3.0.1');
 
 !defined(__NAMESPACE__ . '\DOMAIN') && define (__NAMESPACE__ . '\DOMAIN', 'letter-avatars');
 

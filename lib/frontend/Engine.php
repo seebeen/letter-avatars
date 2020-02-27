@@ -295,7 +295,7 @@ class Engine
 
             else :
 
-                $bg_color = $this->generate_pretty_random_color(false, $this->used_colors);
+                $bg_color = generate_pretty_random_color(false, $this->used_colors);
 
             endif;
 
