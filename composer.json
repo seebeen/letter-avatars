@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "files": [
+            "lib/admin/Utils.php",
+            "lib/frontend/Utils.php"
+        ],
+        "psr-4": {
+            "SGI\\": "lib/"   
+        }
+    }
+}

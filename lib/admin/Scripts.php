@@ -2,8 +2,8 @@
 
 namespace SGI\LtrAv\Admin;
 
-use const \SGI\LtrAv\BASENAME;
-use const \SGI\LtrAv\VERSION;
+use const \SGI\LtrAv\BASENAME,
+          \SGI\LtrAv\VERSION;
 
 class Scripts
 {

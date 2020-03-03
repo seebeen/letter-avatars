@@ -3,7 +3,7 @@
  * Plugin Name: 	  Letter Avatars
  * Plugin URI:  	  https://wordpress.org/plugins/letter-avatars/
  * Description: 	  Letter Avatars enable you to use Letters from commenters names instead of generic avatars.
- * Version: 		  3.0.1
+ * Version: 		  3.1.0
  * Requires at least: 4.8
  * Requires PHP:      7.0
  * Author: 	 	      Sibin Grasic
@@ -17,40 +17,41 @@ use \SGI\LtrAv\Core\Bootstrap as Letter_Avatars;
 // Prevent direct access
 !defined('WPINC') && die;
 
-// Define Main plugin file
-!defined(__NAMESPACE__ . '\FILE') && define(__NAMESPACE__ . '\FILE', __FILE__);
-
-//Define Basename
-!defined(__NAMESPACE__ . '\BASENAME') && define(__NAMESPACE__ . '\BASENAME', plugin_basename(FILE));
-
-//Define internal path
-!defined(__NAMESPACE__ . '\PATH') && define(__NAMESPACE__ . '\PATH', plugin_dir_path( FILE ));
-
-// Define internal version
-!defined(__NAMESPACE__ . '\VERSION') && define (__NAMESPACE__ . '\VERSION', '3.0.1');
-
-!defined(__NAMESPACE__ . '\DOMAIN') && define (__NAMESPACE__ . '\DOMAIN', 'letter-avatars');
+!defined(__NAMESPACE__ . '\FILE')     && define(__NAMESPACE__ . '\FILE', __FILE__);                   // Define Main plugin file
+!defined(__NAMESPACE__ . '\BASENAME') && define(__NAMESPACE__ . '\BASENAME', plugin_basename(FILE));  //Define Basename
+!defined(__NAMESPACE__ . '\PATH')     && define(__NAMESPACE__ . '\PATH', plugin_dir_path( FILE ));    //Define internal path
+!defined(__NAMESPACE__ . '\VERSION')  && define (__NAMESPACE__ . '\VERSION', '3.1.0');                // Define internal version
+!defined(__NAMESPACE__ . '\DOMAIN')   && define (__NAMESPACE__ . '\DOMAIN', 'letter-avatars');        // Define Text domain
 
 // Bootstrap the plugin
-require_once (PATH . '/lib/core/Bootstrap.php');
+require (PATH . '/vendor/autoload.php');
 
 // Run the plugin
-function run_letter_avatars()
+function run_ltrav()
 {
 
     global $wp_version;
 
-    if ( version_compare( PHP_VERSION, '7.0.0', '<' ) || version_compare($wp_version, '5.0', '<') ) :
+    if (version_compare( PHP_VERSION, '7.0.0', '<' ))
+        throw new \Exception(__('Letter Avatars plugin requires PHP 7.0 or greater.', DOMAIN));
 
-        require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-        deactivate_plugins( __FILE__ );
-        wp_die(__('Letter Avatars plugin requires WordPress 5.3.0 and PHP 7.0 or greater. The plugin has now disabled itself', DOMAIN));
+    if (version_compare($wp_version, '4.8', '<'))
+        throw new \Exception(__('Letter Avatars plugin requires WordPress 4.8.0.', DOMAIN));
 
-    endif;
-
-    $ltrav = new Letter_Avatars();
+    return new Letter_Avatars();
 
 }
 
 // And awaaaaay we goooo
-run_letter_avatars();
+try {
+
+    run_ltrav();
+
+} catch (\Exception $e) {
+
+
+    require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+    deactivate_plugins( __FILE__ );
+    wp_die($e->getMessage());
+
+}

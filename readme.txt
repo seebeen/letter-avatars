@@ -75,6 +75,11 @@ I.E. If the avatar size is 100px, font size will be 75px.
 
 == Changelog ==
 
+= 3.1.0 =
+
+* Improvement: Full PSR-12 compliance
+* Bugfix: Fixed various errors and notices in certain scenarios 
+
 = 3.0.1 =
 
 * Bugfix: Fixed fatal error in certain scenarios

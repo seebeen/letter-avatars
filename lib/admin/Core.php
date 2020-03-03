@@ -2,10 +2,10 @@
 
 namespace SGI\LtrAv\Admin;
 
-use const \SGI\LtrAv\BASENAME;
-use const \SGI\LtrAv\VERSION;
-use const \SGI\LtrAv\DOMAIN;
-use const \SGI\LtrAv\PATH;
+use const \SGI\LtrAv\BASENAME,
+          \SGI\LtrAv\VERSION,
+          \SGI\LtrAv\DOMAIN,
+          \SGI\LtrAv\PATH;
 
 /**
  * Main bakend class for all WP-Admin hooks and gimmicks

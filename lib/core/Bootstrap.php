@@ -2,11 +2,12 @@
 
 namespace SGI\LtrAv\Core;
 
-use \SGI\LtrAv\Admin as Admin;
-use \SGI\LtrAv\Frontend as Frontend;
+use \SGI\LtrAv\Admin as Admin,
+	\SGI\LtrAv\Frontend as Frontend;
 
-use const \SGI\LtrAv\FILE;
-use const \SGI\LtrAv\PATH;
+use const \SGI\LtrAv\FILE,
+          \SGI\LtrAv\PATH,
+          \SGI\LtrAv\DOMAIN;
 
 class Bootstrap
 {
@@ -30,7 +31,7 @@ class Bootstrap
 		$domain_path = basename(dirname(FILE)).'/languages';
 
 		load_plugin_textdomain(
-			\SGI\LtrAv\DOMAIN,
+			DOMAIN,
 			false,
 			$domain_path
 		);
@@ -39,11 +40,6 @@ class Bootstrap
 
 	public function load_admin()
 	{
-
-        require_once (PATH . '/lib/admin/Utils.php');
-		require_once (PATH . '/lib/admin/Core.php');
-		require_once (PATH . '/lib/admin/Scripts.php');
-		require_once (PATH . '/lib/admin/Settings.php');
 
 		new Admin\Core();
 		new Admin\Scripts();
@@ -54,12 +50,7 @@ class Bootstrap
 	public function load_frontend()
 	{
 
-        require_once (PATH . '/lib/frontend/Utils.php');
-        require_once (PATH . '/lib/frontend/Core.php');
-        require_once (PATH . '/lib/frontend/Scripts.php');
-        require_once (PATH . '/lib/frontend/Engine.php');
-
-        new Frontend\Core();
+	    new Frontend\Core();
 
 	}
 

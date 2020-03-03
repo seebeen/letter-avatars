@@ -4,7 +4,6 @@ namespace SGI\LtrAv\Admin;
 
 use const \SGI\LtrAv\DOMAIN;
 
-
 class Settings
 {
 

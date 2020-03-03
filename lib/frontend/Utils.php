@@ -171,7 +171,7 @@ function validate_gravatar($id_or_email, $args, $use_cache) {
     }
 
     //Cache usage check
-    if (use_cache) :
+    if ($use_cache) :
 
         $data = wp_cache_get("ltrav_{$email_hash}",'sgi_ltrav');
 
@@ -251,7 +251,7 @@ function process_user_identifier($id_or_email)
         if ( ! empty( $id_or_email->user_id ) ) :
 
             $user = get_user_by( 'id', (int) $id_or_email->user_id );
-            $email = get_userdata($user->ID)->user_email;
+            $email = ($user !== false) ? get_userdata($user->ID)->user_email : false;
 
         else :
 
